@@ -1,5 +1,5 @@
 const poke_container = document.getElementById('poke-container');
-const pokemon_count = 50;
+const pokemon_count = 9;
 const colors = {
     Normal: '#F5F5F5',
     Feu: '#FDDFDF',
@@ -21,11 +21,11 @@ const main_types = Object.keys(colors);
 
 async function fetchPokemons() {
     for(let i = 1; i < pokemon_count; i++) {
-        await fetchPokemon(i);
+        await fetchPokemonList(i);
     }
 }
 
-async function fetchPokemon(id) {
+async function fetchPokemonList(id) {
     const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
 
     const response = await fetch(url);
@@ -63,32 +63,34 @@ async function createPokemonCard(pokemon) {
     pokemonEl.classList.add('pokemon');
 
     const id = pokemon.id.toString().padStart(3, '0');
+    pokemonEl.setAttribute('id', id);
 
     const speciesName = pokemon.species.name;
     const species = await fetchPokemonSpecies(speciesName);
     const name = species.names[4].name;
 
     const types = pokemon.types;
-    console.log(types);
 
-    // if (types.length > 1) {
-        types.forEach(async function (type) {
-            const typeName = type.type.name;     
-            console.log(typeName);  
-            const typeNameFr = await fetchPokemonTypes(typeName);
-            console.log(typeNameFr);
-            return typeName;
-        })
-    //     const typeNameFr = await fetchPokemonTypes(typeName);
-    //     console.log(typeNameFr);
-    // } 
-    
-    // console.log(typeName);
+    const typeList = types.map(async function (type, index) {
+        const typeName = type.type.name;     
+        console.log(typeName);  
+        const typeFromApi = await fetchPokemonTypes(typeName);
+        console.log(typeFromApi);
+        const typeNameFr = typeFromApi.names[3].name;
+        console.log(typeNameFr);
+        return typeNameFr;
+    })
+
+    console.log(typeList);
+    // const finalType = Object.keys(typeList).map(function(type){
+    //     return finalType[type];
+    // });
+    // console.log(finalType);
     // const typeNameFr = await fetchPokemonTypes(typeName);
     
     // const types = await fetchPokemonTypes(pokemon.type.id);
-    // const type = types.names[3].name
-    // const color = colors[type];
+    // const type = typeNameFr.names[3].name
+    // const color = colors[typeNameFr];
     
     // pokemonEl.style.backgroundColor = color;
 
@@ -105,6 +107,11 @@ async function createPokemonCard(pokemon) {
     pokemonEl.innerHTML = pokemonInnerHTML;
 
     poke_container.appendChild(pokemonEl);
+}
+
+function showPokemon(id) {
+
+
 }
 
 fetchPokemons();
