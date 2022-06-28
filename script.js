@@ -1,20 +1,20 @@
 const poke_container = document.getElementById('poke-container');
-const pokemon_count = 9;
+const pokemon_count = 150;
 const colors = {
-    Normal: '#F5F5F5',
-    Feu: '#FDDFDF',
-    Plante: '#DEFDE0',
-    Électrik: '#FCF7DE',
-    Eau: '#DEF3FD',
-    Sol: '#f4e7da',
-    Roche: '#d5d5d4',
-    Fée: '#fceaff',
-    Poison: '#98d7a5',
-    Insecte: '#f8d5a3',
-    Dragon: '#97b3e6',
-    Psy: '#eaeda1',
-    Vol: '#F5F5F5',
-    Combat: '#E6E0D4',
+    normal: '#F5F5F5',
+    fire: '#FDDFDF',
+    grass: '#DEFDE0',
+    electric: '#FCF7DE',
+    water: '#DEF3FD',
+    ground: '#f4e7da',
+    rock: '#d5d5d4',
+    fairy: '#fceaff',
+    poison: '#98d7a5',
+    bug: '#f8d5a3',
+    dragon: '#97b3e6',
+    psychic: '#eaeda1',
+    flying: '#F5F5F5',
+    fighting: '#E6E0D4',
 }
 
 const main_types = Object.keys(colors);
@@ -69,30 +69,10 @@ async function createPokemonCard(pokemon) {
     const species = await fetchPokemonSpecies(speciesName);
     const name = species.names[4].name;
 
-    const types = pokemon.types;
-
-    const typeList = types.map(async function (type, index) {
-        const typeName = type.type.name;     
-        console.log(typeName);  
-        const typeFromApi = await fetchPokemonTypes(typeName);
-        console.log(typeFromApi);
-        const typeNameFr = typeFromApi.names[3].name;
-        console.log(typeNameFr);
-        return typeNameFr;
-    })
-
-    console.log(typeList);
-    // const finalType = Object.keys(typeList).map(function(type){
-    //     return finalType[type];
-    // });
-    // console.log(finalType);
-    // const typeNameFr = await fetchPokemonTypes(typeName);
+    const poke_types = pokemon.types.map(type => type.type.name)
+    const color = colors[poke_types];
     
-    // const types = await fetchPokemonTypes(pokemon.type.id);
-    // const type = typeNameFr.names[3].name
-    // const color = colors[typeNameFr];
-    
-    // pokemonEl.style.backgroundColor = color;
+    pokemonEl.style.backgroundColor = color;
 
     const pokemonInnerHTML = `
     <div class="img-container">
@@ -101,17 +81,12 @@ async function createPokemonCard(pokemon) {
     <div class="info">
         <span class="number">#${id}</span>
         <h3 class="name">${name}</h3>
-        <small class="type">Type: <span></span></small>
+        <small class="type">Type: <span>${poke_types}</span></small>
     </div>`
 
     pokemonEl.innerHTML = pokemonInnerHTML;
 
     poke_container.appendChild(pokemonEl);
-}
-
-function showPokemon(id) {
-
-
 }
 
 fetchPokemons();
